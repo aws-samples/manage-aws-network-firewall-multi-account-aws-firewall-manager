@@ -36,7 +36,7 @@ Aside the multi-Account Firewall Manager implementation, the repository also cre
 
 ## Firewall policies
 
-## AWS Firewall Manager - Decentralized ingress policy
+### AWS Firewall Manager - Decentralized ingress policy
 
 You can find the Firewall Manager policy definition in the *main\_central\_account.tf* file:
 
@@ -93,7 +93,7 @@ You can check the [AWS documentation](https://docs.aws.amazon.com/waf/latest/dev
 pass tcp $EXTERNAL_NET any -> $HOME_NET any (msg: "Allowing HTTP ingress access"; sid:2; rev:1;)
 ```
 
-## AWS Network Firewall - Centralized policy
+### AWS Network Firewall - Centralized policy
 
 You can find the Firewall Manager policy definition in the *firewall\_policy.tf* file:
 
