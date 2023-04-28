@@ -12,9 +12,8 @@ data "aws_caller_identity" "aws_spoke_account" {
 module "ingress_vpcs" {
   providers = { aws = aws.awsspoke }
   for_each  = var.ingress_vpcs
-  source    = "git::https://github.com/pablo19sc/terraform-aws-vpc"
-  #source    = "aws-ia/vpc/aws"
-  #version   = "= 4.2.0"
+  source    = "aws-ia/vpc/aws"
+  version   = "= 4.2.1"
 
   name       = each.value.name
   cidr_block = each.value.cidr_block
@@ -27,7 +26,7 @@ module "ingress_vpcs" {
 
   subnets = {
     public = {
-      cidrs = slice(each.value.public_subnet_cidrs, 0, each.value.number_azs)
+      cidrs          = slice(each.value.public_subnet_cidrs, 0, each.value.number_azs)
       connect_to_igw = false
     }
     workload        = { cidrs = slice(each.value.workload_subnet_cidrs, 0, each.value.number_azs) }
@@ -77,34 +76,36 @@ module "compute" {
 }
 
 # ---------- ROUTING TO NETWORK FIREWALL RESOURCES (CREATED BY FIREWALL MANAGER) ----------
-# module "vpc_resources" {
-#   providers = { aws = aws.awsspoke }
-#   for_each = module.ingress_vpcs
-#   source   = "./modules/vpc-resources"
 
-#   vpc_id     = each.value.vpc_attributes.id
-#   vpc_name   = each.key
-#   aws_region = var.aws_region
-#   azs        = each.value.azs
-#   firewall_manager_information = {
-#     name = "ingress-fms-policy"
-#     id   = aws_fms_policy.ingress_policy.id
-#   }
-# }
+module "vpc_resources" {
+  providers = { aws = aws.awsspoke }
+  for_each  = module.ingress_vpcs
+  source    = "./modules/vpc-resources"
 
-# module "vpc_routes" {
-#   providers = { aws = aws.awsspoke }
-#   for_each = module.ingress_vpcs
-#   source   = "./modules/vpc-routes"
+  vpc_id     = each.value.vpc_attributes.id
+  vpc_name   = each.key
+  igw_id     = each.value.internet_gateway[0].id
+  aws_region = var.aws_region
+  azs        = each.value.azs
+  firewall_manager_information = {
+    name = "ingress-fms-policy"
+    id   = aws_fms_policy.ingress_policy.id
+  }
+}
 
-#   public_subnet_route_tables   = { for k, v in each.value.rt_attributes_by_type_by_az.public : k => v.id }
-#   firewall_subnet_route_tables = module.vpc_resources[each.key].firewall_route_tables
-#   igw_route_table              = module.vpc_resources[each.key].igw_route_table
-#   internet_gateway             = module.vpc_resources[each.key].internet_gateway
-#   firewall_endpoints           = module.vpc_resources[each.key].firewall_endpoints
-#   public_subnet_cidrs          = var.ingress_vpcs[each.key].public_subnet_cidrs
-#   azs                          = each.value.azs
-# }
+module "vpc_routes" {
+  providers = { aws = aws.awsspoke }
+  for_each  = module.ingress_vpcs
+  source    = "./modules/vpc-routes"
+
+  public_subnet_route_tables   = { for k, v in each.value.rt_attributes_by_type_by_az.public : k => v.id }
+  firewall_subnet_route_tables = module.vpc_resources[each.key].firewall_route_tables
+  igw_route_table              = module.vpc_resources[each.key].igw_route_table
+  internet_gateway             = each.value.internet_gateway[0].id
+  firewall_endpoints           = module.vpc_resources[each.key].firewall_endpoints
+  public_subnet_cidrs          = var.ingress_vpcs[each.key].public_subnet_cidrs
+  azs                          = each.value.azs
+}
 
 # ---------- IAM ROLE (AWS SYSTEMS MANAGER ACCESS) ----------
 # IAM instance profile
