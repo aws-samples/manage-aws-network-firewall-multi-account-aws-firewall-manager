@@ -27,7 +27,7 @@ module "ingress_vpcs" {
   subnets = {
     public = {
       cidrs          = slice(each.value.public_subnet_cidrs, 0, each.value.number_azs)
-      connect_to_igw = false
+      #connect_to_igw = false
     }
     workload        = { cidrs = slice(each.value.workload_subnet_cidrs, 0, each.value.number_azs) }
     transit_gateway = { cidrs = slice(each.value.tgw_subnet_cidrs, 0, each.value.number_azs) }
@@ -76,36 +76,37 @@ module "compute" {
 }
 
 # ---------- ROUTING TO NETWORK FIREWALL RESOURCES (CREATED BY FIREWALL MANAGER) ----------
+# module "vpc_resources" {
+#   providers = {
+#     aws = aws.awsspoke
+#   }
+#   for_each = module.ingress_vpcs
+#   source = "./modules/vpc-resources"
 
-module "vpc_resources" {
-  providers = { aws = aws.awsspoke }
-  for_each  = module.ingress_vpcs
-  source    = "./modules/vpc-resources"
+#   vpc_id = each.value.vpc_attributes.id
+#   vpc_name = each.key
+#   igw_id = each.value.internet_gateway[0].id
+#   aws_region = var.aws_region
+#   azs = each.value.azs
+#   firewall_manager_information = {
+#     name = "ingress-fms-policy"
+#     id = aws_fms_policy.ingress_policy.id
+#   }
+# }
 
-  vpc_id     = each.value.vpc_attributes.id
-  vpc_name   = each.key
-  igw_id     = each.value.internet_gateway[0].id
-  aws_region = var.aws_region
-  azs        = each.value.azs
-  firewall_manager_information = {
-    name = "ingress-fms-policy"
-    id   = aws_fms_policy.ingress_policy.id
-  }
-}
+# module "vpc_routes" {
+#   providers = { aws = aws.awsspoke }
+#   for_each  = module.ingress_vpcs
+#   source    = "./modules/vpc-routes"
 
-module "vpc_routes" {
-  providers = { aws = aws.awsspoke }
-  for_each  = module.ingress_vpcs
-  source    = "./modules/vpc-routes"
-
-  public_subnet_route_tables   = { for k, v in each.value.rt_attributes_by_type_by_az.public : k => v.id }
-  firewall_subnet_route_tables = module.vpc_resources[each.key].firewall_route_tables
-  igw_route_table              = module.vpc_resources[each.key].igw_route_table
-  internet_gateway             = each.value.internet_gateway[0].id
-  firewall_endpoints           = module.vpc_resources[each.key].firewall_endpoints
-  public_subnet_cidrs          = var.ingress_vpcs[each.key].public_subnet_cidrs
-  azs                          = each.value.azs
-}
+#   public_subnet_route_tables   = { for k, v in each.value.rt_attributes_by_type_by_az.public : k => v.id }
+#   firewall_subnet_route_tables = module.vpc_resources[each.key].firewall_route_tables
+#   igw_route_table              = module.vpc_resources[each.key].igw_route_table
+#   internet_gateway             = each.value.internet_gateway[0].id
+#   firewall_endpoints           = module.vpc_resources[each.key].firewall_endpoints
+#   public_subnet_cidrs          = var.ingress_vpcs[each.key].public_subnet_cidrs
+#   azs                          = each.value.azs
+# }
 
 # ---------- IAM ROLE (AWS SYSTEMS MANAGER ACCESS) ----------
 # IAM instance profile

@@ -15,48 +15,48 @@ locals {
 }
 
 # ---------- AWS FIREWALL MANAGER - INGRESS POLICY ----------
-resource "aws_fms_policy" "ingress_policy" {
-  provider      = aws.awscentral
-  name          = "ingress-fms-policy"
-  description   = "FMS Policy - Ingress VPCs."
-  resource_type = "AWS::EC2::VPC"
+# resource "aws_fms_policy" "ingress_policy" {
+#   provider      = aws.awscentral
+#   name          = "ingress-fms-policy"
+#   description   = "FMS Policy - Ingress VPCs."
+#   resource_type = "AWS::EC2::VPC"
 
-  remediation_enabled                = true
-  delete_all_policy_resources        = true
-  delete_unused_fm_managed_resources = true
+#   remediation_enabled                = true
+#   delete_all_policy_resources        = true
+#   delete_unused_fm_managed_resources = true
 
-  exclude_resource_tags = false
-  resource_tags = {
-    fms_ingress = true
-  }
+#   exclude_resource_tags = false
+#   resource_tags = {
+#     fms_ingress = true
+#   }
 
-  security_service_policy_data {
-    type = "NETWORK_FIREWALL"
+#   security_service_policy_data {
+#     type = "NETWORK_FIREWALL"
 
-    managed_service_data = jsonencode({
-      type = "NETWORK_FIREWALL"
-      networkFirewallStatelessRuleGroupReferences = [{
-        resourceARN = aws_networkfirewall_rule_group.drop_remote.arn
-        priority    = 1
-      }]
-      networkFirewallStatelessDefaultActions         = ["aws:forward_to_sfe"]
-      networkFirewallStatelessFragmentDefaultActions = ["aws:forward_to_sfe"]
-      networkFirewallStatelessCustomActions          = []
-      networkFirewallStatefulEngineOptions           = { ruleOrder = "STRICT_ORDER" }
-      networkFirewallStatefulRuleGroupReferences = [{
-        resourceARN = aws_networkfirewall_rule_group.allow_ingress.arn
-        priority    = 1
-      }]
-      networkFirewallStatefulDefaultActions = ["aws:drop_strict", "aws:alert_strict"]
-      networkFirewallOrchestrationConfig = {
-        singleFirewallEndpointPerVPC = false
-        allowedIPV4CidrList          = local.fms_ingress_allowedIPV4CidrList
-        routeManagementAction        = "MONITOR"
-        routeManagementTargetTypes   = ["InternetGateway"]
-      }
-    })
-  }
-}
+#     managed_service_data = jsonencode({
+#       type = "NETWORK_FIREWALL"
+#       networkFirewallStatelessRuleGroupReferences = [{
+#         resourceARN = aws_networkfirewall_rule_group.drop_remote.arn
+#         priority    = 1
+#       }]
+#       networkFirewallStatelessDefaultActions         = ["aws:forward_to_sfe"]
+#       networkFirewallStatelessFragmentDefaultActions = ["aws:forward_to_sfe"]
+#       networkFirewallStatelessCustomActions          = []
+#       networkFirewallStatefulEngineOptions           = { ruleOrder = "STRICT_ORDER" }
+#       networkFirewallStatefulRuleGroupReferences = [{
+#         resourceARN = aws_networkfirewall_rule_group.allow_ingress.arn
+#         priority    = 1
+#       }]
+#       networkFirewallStatefulDefaultActions = ["aws:drop_strict", "aws:alert_strict"]
+#       networkFirewallOrchestrationConfig = {
+#         singleFirewallEndpointPerVPC = false
+#         allowedIPV4CidrList          = local.fms_ingress_allowedIPV4CidrList
+#         routeManagementAction        = "MONITOR"
+#         routeManagementTargetTypes   = ["InternetGateway"]
+#       }
+#     })
+#   }
+# }
 
 # ---------- HUB AND SPOKE ARCHITECTURE (CENTRAL INSPECTION & EGRESS, AND SHARED SERVICES) ----------
 # AWS Transit Gateway
