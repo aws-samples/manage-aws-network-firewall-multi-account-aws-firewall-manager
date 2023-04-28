@@ -32,13 +32,6 @@ data "aws_route_table" "firewall_route_tables" {
 
 # ---------- DATA SOURCE: Internet Gateway & RESOURCE: Internet gateway route table ----------
 
-data "aws_internet_gateway" "igw" {
-  filter {
-    name   = "attachment.vpc-id"
-    values = [var.vpc_id]
-  }
-}
-
 resource "aws_route_table" "igw_route_table" {
   vpc_id = var.vpc_id
 
@@ -48,6 +41,6 @@ resource "aws_route_table" "igw_route_table" {
 }
 
 resource "aws_route_table_association" "igw_route_table_assoc" {
-  gateway_id     = data.aws_internet_gateway.igw.id
+  gateway_id     = var.igw_id
   route_table_id = aws_route_table.igw_route_table.id
 }

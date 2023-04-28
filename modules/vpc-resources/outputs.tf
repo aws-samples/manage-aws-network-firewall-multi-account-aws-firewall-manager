@@ -13,11 +13,6 @@ output "firewall_route_tables" {
   value       = { for i, az in var.azs : az => data.aws_route_table.firewall_route_tables[i].id }
 }
 
-output "internet_gateway" {
-  description = "Internet gateway ID."
-  value       = data.aws_internet_gateway.igw.id
-}
-
 output "igw_route_table" {
   description = "Internet gateway route table ID."
   value       = aws_route_table.igw_route_table.id

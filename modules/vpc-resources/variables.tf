@@ -13,6 +13,11 @@ variable "vpc_name" {
   description = "VPC name."
 }
 
+variable "igw_id" {
+  type        = string
+  description = "Internet gateway ID."
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS Region where the AWS Network Firewall resource has been created."
