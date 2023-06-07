@@ -52,7 +52,7 @@ terraform apply -target="aws_secretsmanager_secret.spoke_vpc_information" -targe
 
 Note that when doing a `terraform plan`, there are more resources to add than the specified as *targets*. To simplify the command, we are taking advantage of the [target](https://developer.hashicorp.com/terraform/tutorials/state/resource-targeting) functionality in Terraform, that also deploys resources that the targets depend on. We are following this pattern in the rest of steps.
 
-### Step 2 [SPOKE ACCOUNT] - Spoke VPCs and Secrets Manager
+### Step 2 [SPOKE ACCOUNT] - Spoke VPCs and Secrets Manager
 
 Once we have the Transit Gateway deployed in the central Account, we can create the Spoke VPCs in the spoke Account. In addition, we add the spoke VPC information (TGW VPC attachment IDs, CIDR blocks to use for the firewall subnets, and VPC IDs) to the Secrets Manager secret provided by the central Account.
 
@@ -156,7 +156,7 @@ You can check the [AWS documentation](https://docs.aws.amazon.com/waf/latest/dev
 pass tcp $EXTERNAL_NET any -> $HOME_NET any (msg: "Allowing HTTP ingress access"; sid:2; rev:1;)
 ```
 
-### AWS Network Firewall - Centralized policy
+### AWS Network Firewall - Centralized policy
 
 You can find the Firewall Manager policy definition in the *firewall\_policy.tf* file:
 
