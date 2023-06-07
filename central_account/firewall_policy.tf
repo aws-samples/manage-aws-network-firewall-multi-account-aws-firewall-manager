@@ -5,8 +5,6 @@
 
 # ---------- NETWORK FIREWALL POLICY (CENTRAL INSPECTION) ----------
 resource "aws_networkfirewall_firewall_policy" "central_inspection_policy" {
-  provider = aws.awscentral
-
   name = "central-firewall-policy-${var.identifier}"
 
   firewall_policy {
@@ -31,8 +29,6 @@ resource "aws_networkfirewall_firewall_policy" "central_inspection_policy" {
 
 # ---------- STATELESS RULE GROUP - DROPPING SSH OR RDP ----------
 resource "aws_networkfirewall_rule_group" "drop_remote" {
-  provider = aws.awscentral
-
   capacity = 2
   name     = "drop-remote-${var.identifier}"
   type     = "STATELESS"
@@ -50,8 +46,8 @@ resource "aws_networkfirewall_rule_group" "drop_remote" {
                 address_definition = "0.0.0.0/0"
               }
               source_port {
-                from_port = 22
-                to_port   = 22
+                from_port = 0
+                to_port   = 65535
               }
               destination {
                 address_definition = "0.0.0.0/0"
@@ -63,22 +59,6 @@ resource "aws_networkfirewall_rule_group" "drop_remote" {
             }
           }
         }
-
-        stateless_rule {
-          priority = 2
-          rule_definition {
-            actions = ["aws:drop"]
-            match_attributes {
-              protocols = [27]
-              source {
-                address_definition = "0.0.0.0/0"
-              }
-              destination {
-                address_definition = "0.0.0.0/0"
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -86,8 +66,6 @@ resource "aws_networkfirewall_rule_group" "drop_remote" {
 
 # ---------- STATEFUL RULE GROUP - ALLOWING INGRESS HTTP ACCESS (STRICT) ----------
 resource "aws_networkfirewall_rule_group" "allow_ingress" {
-  provider = aws.awscentral
-
   capacity = 50
   name     = "allow-ingress-${var.identifier}"
   type     = "STATEFUL"
@@ -105,8 +83,6 @@ resource "aws_networkfirewall_rule_group" "allow_ingress" {
 
 # ---------- STATEFUL RULE GROUP - BLOCKING TRAFFIC BETWEEN SPOKE VPCS (DEFAULT) ----------
 resource "aws_networkfirewall_rule_group" "drop_east_west" {
-  provider = aws.awscentral
-
   capacity = 50
   name     = "allow-egress-${var.identifier}"
   type     = "STATEFUL"

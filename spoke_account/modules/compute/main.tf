@@ -3,8 +3,6 @@
 
 # --- modules/compute/main.tf ---
 
-
-
 # ---------- NETWORK LOAD BALANCER ----------
 # Network Load Balancer resource
 resource "aws_lb" "nlb" {
@@ -82,7 +80,6 @@ resource "aws_instance" "ec2_instance" {
   instance_type               = var.instance_type
   vpc_security_group_ids      = [aws_security_group.instance_sg.id]
   subnet_id                   = values({ for k, v in var.vpc.private_subnet_attributes_by_az : split("/", k)[1] => v.id if split("/", k)[0] == "workload" })[count.index]
-  iam_instance_profile        = var.instance_profile
 
   metadata_options {
     http_endpoint = "enabled"

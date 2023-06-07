@@ -28,10 +28,5 @@ variable "instance_type" {
   description = "Instance type."
 }
 
-variable "instance_profile" {
-  type        = string
-  description = "EC2 Instance Profile."
-}
-
 
 

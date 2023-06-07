@@ -3,15 +3,15 @@
 
 # --- modules/vpc-resources/main.tf ---
 
-# ---------- AWS ACCOUNT ----------
+# AWS Account
 data "aws_caller_identity" "aws_account" {}
 
-# ---------- DATA SOURCE: AWS Network Firewall ----------
+# AWS Network Firewall
 data "aws_networkfirewall_firewall" "anfw" {
-  arn = "arn:aws:network-firewall:${var.aws_region}:${data.aws_caller_identity.aws_account.account_id}:firewall/FMManagedNetworkFirewall${var.firewall_manager_information.name}${var.firewall_manager_information.id}${var.vpc_id}"
+  arn = "arn:aws:network-firewall:${var.aws_region}:${data.aws_caller_identity.aws_account.id}:firewall/FMManagedNetworkFirewall${var.firewall_manager_information.name}${var.firewall_manager_information.id}${var.vpc_id}"
 }
 
-# ---------- DATA SOURCE: SUBNET AND ROUTE TABLE ----------
+# Subnet and Route Table
 data "aws_subnet" "firewall_subnets" {
   count = length(var.azs)
 
@@ -30,8 +30,7 @@ data "aws_route_table" "firewall_route_tables" {
   subnet_id = data.aws_subnet.firewall_subnets[count.index].id
 }
 
-# ---------- DATA SOURCE: Internet Gateway & RESOURCE: Internet gateway route table ----------
-
+# IGW route table
 resource "aws_route_table" "igw_route_table" {
   vpc_id = var.vpc_id
 
