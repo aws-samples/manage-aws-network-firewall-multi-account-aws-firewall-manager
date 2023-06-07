@@ -1,4 +1,3 @@
-<!-- BEGIN_TF_DOCS -->
 # Manage your AWS Network Firewall resources in multi-Account environments using AWS Firewall Manager - Terraform sample
 
 In this repository, you will use [AWS Firewall Manager](https://aws.amazon.com/firewall-manager/) to deploy decentralized [AWS Network Firewall](https://aws.amazon.com/network-firewall/) resources between AWS Accounts. The purpose of the repository is to show how to create Firewall Manager rules using IaC (Terraform as an example) in a central Networking/Security AWS Account, while all the extra routing configuration needed in the Spoke AWS Accounts (to point the traffic to/from the Internet gateway via the firewall endpoints).
@@ -12,7 +11,7 @@ Aside the multi-Account Firewall Manager implementation, the repository also cre
 
 You will find two folders with the code (*central\_account* and *spoke\_account*) to separate the resources and the actions to perform in two different AWS Accounts. Feel free to deploy everything in one Account, although we recommend the use of two to test the multi-Account functionality of AWS Firewall Manager.
 
-[ADD IMAGE HERE]
+![Architecture diagram](./images/diagram.png)
 
 ## Prerequities
 
@@ -234,28 +233,3 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 ## License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
-
-## Requirements
-
-No requirements.
-
-## Providers
-
-No providers.
-
-## Modules
-
-No modules.
-
-## Resources
-
-No resources.
-
-## Inputs
-
-No inputs.
-
-## Outputs
-
-No outputs.
-<!-- END_TF_DOCS -->
