@@ -50,7 +50,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region to use. | `string` | `"us-east-1"` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS Region to use. | `string` | `"eu-north-1"` | no |
 | <a name="input_identifier"></a> [identifier](#input\_identifier) | Project identifier. | `string` | `"nis341-central"` | no |
 | <a name="input_inspection_vpc"></a> [inspection\_vpc](#input\_inspection\_vpc) | Definition of Central VPCs - Inspection and Shared Services. | `any` | <pre>{<br>  "cidr_block": "10.100.0.0/24",<br>  "endpoints_subnet_cidrs": [<br>    "10.100.0.48/28",<br>    "10.100.0.64/28",<br>    "10.100.0.80/28"<br>  ],<br>  "name": "inspection-vpc",<br>  "number_azs": 2,<br>  "public_subnet_cidrs": [<br>    "10.100.0.0/28",<br>    "10.100.0.16/28",<br>    "10.100.0.32/28"<br>  ],<br>  "tgw_subnet_cidrs": [<br>    "10.100.0.96/28",<br>    "10.100.0.112/28",<br>    "10.100.0.128/28"<br>  ]<br>}</pre> | no |
 | <a name="input_network_supernet"></a> [network\_supernet](#input\_network\_supernet) | Supernet CIDR to identify all the VPCs in the network. | `string` | `"10.0.0.0/8"` | no |
