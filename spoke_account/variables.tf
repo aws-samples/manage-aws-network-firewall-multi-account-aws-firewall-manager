@@ -12,7 +12,7 @@ variable "identifier" {
 variable "aws_region" {
   type        = string
   description = "AWS Region to use."
-  default     = "us-east-1"
+  default     = "eu-north-1"
 }
 
 variable "ingress_vpcs" {
@@ -27,7 +27,7 @@ variable "ingress_vpcs" {
       public_subnet_cidrs   = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
       workload_subnet_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
       tgw_subnet_cidrs      = ["10.0.7.0/28", "10.0.7.16/28", "10.0.7.32/28"]
-      instance_type         = "t2.micro"
+      instance_type         = "t3.micro"
     }
     ingress2 = {
       name                  = "ingress2"
@@ -37,7 +37,7 @@ variable "ingress_vpcs" {
       public_subnet_cidrs   = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
       workload_subnet_cidrs = ["10.1.4.0/24", "10.1.5.0/24", "10.1.6.0/24"]
       tgw_subnet_cidrs      = ["10.1.7.0/28", "10.1.7.16/28", "10.1.7.32/28"]
-      instance_type         = "t2.micro"
+      instance_type         = "t3.micro"
     }
   }
 }
