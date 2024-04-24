@@ -82,23 +82,13 @@ resource "aws_secretsmanager_secret_version" "spoke_vpc_information" {
 }
 
 # ---------- COMPUTE (NLB + EC2 INSTANCES) ----------
-# Data resource to determine the latest Amazon Linux2 AMI
+# Data resource to determine the latest Amazon Linux Linux 2023 AMI
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
-
   filter {
-    name = "name"
-    values = [
-      "amzn-ami-hvm-*-x86_64-gp2",
-    ]
-  }
-
-  filter {
-    name = "owner-alias"
-    values = [
-      "amazon",
-    ]
+    name   = "name"
+    values = ["al2023-ami-2*x86_64"]
   }
 }
 
