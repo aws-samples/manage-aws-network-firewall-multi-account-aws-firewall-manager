@@ -46,6 +46,25 @@ resource "aws_fms_policy" "ingress_policy" {
         routeManagementAction        = "MONITOR"
         routeManagementTargetTypes   = ["InternetGateway"]
       }
+      networkFirewallLoggingConfiguration = {
+        logDestinationConfigs = [
+          {
+            logDestinationType = "S3",
+            logType            = "FLOW",
+            logDestination = {
+              bucketName = "${var.log_destination_s3_arn}"
+            }
+          },
+          {
+            logDestinationType = "S3",
+            logType            = "ALERT",
+            logDestination = {
+              bucketName = "${var.log_destination_s3_arn}"
+            }
+          }
+        ]
+        overrideExistingConfig = false
+      }
     })
   }
 }
