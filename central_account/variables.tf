@@ -44,3 +44,8 @@ variable "secrets_names" {
     spoke_vpc_information = "spoke_vpc_information"
   }
 }
+
+variable "log_destination_s3_arn" {
+  type        = string
+  description = "Network Firewall Log Destination"
+}
